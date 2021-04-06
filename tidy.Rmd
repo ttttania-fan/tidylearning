@@ -5,7 +5,7 @@ output: html_document
 
 ```{r}
 # Get the Data
-
+library(tidyverse)
 # Read in with tidytuesdayR package 
 # Install from CRAN via: install.packages("tidytuesdayR")
 # This loads the readme and all the datasets for the week of interest
@@ -21,15 +21,39 @@ games <- tuesdata$games
 
 games <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-03-16/games.csv')
 
+
 ```
 ```{r}
 games
+library(scales)
+library(lubridate)
+```
+
+```{r}
+games%>%
+  count(gamename)
+games<-games%>%
+  mutate(date = ymd(paste(year,month,1)))%>%
+  mutate(month = fct_reorder(month,month(date)))
+```
+
+```{r}
+# # of games measured
+games%>%
+  count(date)%>%
+  ggplot(aes(date,n))+
+  geom_col()
 
 ```
 
 
-
-
+```{r}
+#Average number of players at the same time by date
+games%>%
+  group_by(date)%>%
+  ggplot(aes(date,avg))+
+  geom_col()
+```
 
 
 
